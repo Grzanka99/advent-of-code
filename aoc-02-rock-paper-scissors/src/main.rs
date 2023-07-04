@@ -1,5 +1,4 @@
-use std::{str::Lines, fs};
-
+use std::{fs, str::Lines};
 
 #[derive(Debug)]
 enum Shape {
@@ -20,12 +19,12 @@ impl Shape {
                 Shape::Rock => Some(Shape::Paper),
                 Shape::Paper => Some(Shape::Scissors),
                 Shape::Scissors => Some(Shape::Rock),
-            }
+            },
             "X" => match val {
                 Shape::Rock => Some(Shape::Scissors),
                 Shape::Paper => Some(Shape::Rock),
                 Shape::Scissors => Some(Shape::Paper),
-            }
+            },
             _ => None,
         }
     }
@@ -57,14 +56,15 @@ impl Score {
     }
 }
 
-fn find_tokens(lines: Lines) -> Vec::<(Shape, Shape)> {
-    let mut tokens: Vec::<(Shape, Shape)> = vec![];
+fn find_tokens(lines: Lines) -> Vec<(Shape, Shape)> {
+    let mut tokens: Vec<(Shape, Shape)> = vec![];
 
     lines.for_each(|line| {
-
-
         let opponent = Shape::get_shape(line.split_whitespace().next().unwrap());
-        let player = Shape::get_correct_shape(line.split_whitespace().last().unwrap(), &opponent.as_ref().unwrap());
+        let player = Shape::get_correct_shape(
+            line.split_whitespace().last().unwrap(),
+            &opponent.as_ref().unwrap(),
+        );
 
         tokens.push((opponent.unwrap(), player.unwrap()));
     });
@@ -73,7 +73,6 @@ fn find_tokens(lines: Lines) -> Vec::<(Shape, Shape)> {
 }
 
 fn main() {
-
     let content = fs::read_to_string("vals.txt").expect("Should be able to read file");
     let lines = content.lines();
     let tokens = find_tokens(lines);
@@ -85,19 +84,18 @@ fn main() {
                 (_, Shape::Paper) => Score::Win(6 + 2),
                 (_, Shape::Scissors) => Score::Lose(0 + 3),
                 (_, Shape::Rock) => Score::Draw(1 + 3),
-            }
+            },
             (Shape::Paper, _) => match token {
                 (_, Shape::Scissors) => Score::Win(6 + 3),
                 (_, Shape::Rock) => Score::Lose(0 + 1),
                 (_, Shape::Paper) => Score::Draw(3 + 2),
-            }
+            },
             (Shape::Scissors, _) => match token {
                 (_, Shape::Rock) => Score::Win(6 + 1),
                 (_, Shape::Paper) => Score::Lose(0 + 2),
                 (_, Shape::Scissors) => Score::Draw(3 + 3),
-            }
+            },
         };
-
 
         scores.push(score);
     }
