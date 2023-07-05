@@ -21,8 +21,8 @@ fn main() {
         let range1 = (r1start..=r1stop).collect::<Vec<i32>>();
         let range2 = (r2start..=r2stop).collect::<Vec<i32>>();
 
-        if range1.iter().all(|item| range2.contains(item))
-            || range2.iter().all(|item| range1.contains(item))
+        if range1.iter().any(|item| range2.contains(item))
+            || range2.iter().any(|item| range1.contains(item))
         {
             fully_contained_sections += 1;
         }
