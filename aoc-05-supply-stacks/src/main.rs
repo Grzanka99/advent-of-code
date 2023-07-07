@@ -16,8 +16,6 @@ fn first_meaningfull_char(line: &str) -> Option<char> {
     };
 }
 
-// fn extract_supplies()
-
 fn main() {
     let file = fs::read_to_string("vals").expect("Should read file");
     let lines = file.lines();
@@ -31,13 +29,10 @@ fn main() {
     }
 
     for line in lines {
-        let frist_char = match first_meaningfull_char(line) {
-            Some(x) => x,
-            None => ' ',
-        };
+        let frist_char = first_meaningfull_char(line);
 
         match frist_char {
-            '[' => {
+            Some('[') => {
                 let to_chunks = line
                     .as_bytes()
                     .chunks(4)
@@ -49,10 +44,9 @@ fn main() {
                     if !chunk.trim().is_empty() {
                         supplies[index].push(chunk.trim());
                     }
-                    // print!("i: {}, c: {}", index, chunk);
                 }
             }
-            'm' => {
+            Some('m') => {
                 let to_tokens: Vec<&str> = line.split_whitespace().collect();
                 let to_chunks = to_tokens
                     .chunks(2)
@@ -67,34 +61,30 @@ fn main() {
 
                 tokens.push(part);
             }
-            _ => (),
+            None | _ => (),
         }
     }
 
-    for context in tokens {
+    for ctx in tokens {
         let mut to_merge: Vec<&str> = vec![];
-        // println!("{:?}", context);
 
-        for _ in 0..context[0] {
-            supplies[context[1] - 1].reverse();
-            to_merge.push(&supplies[context[1] - 1].pop().unwrap());
-            supplies[context[1] - 1].reverse();
+        for _ in 0..ctx[0] {
+            supplies[ctx[1] - 1].reverse();
+            to_merge.push(&supplies[ctx[1] - 1].pop().unwrap());
+            supplies[ctx[1] - 1].reverse();
         }
-        // print!("{:?}", to_merge);
-
-        supplies[context[2] - 1].reverse();
 
         to_merge.reverse();
+        supplies[ctx[2] - 1].reverse();
+
         for item in to_merge {
-            supplies[context[2] - 1].push(item);
+            supplies[ctx[2] - 1].push(item);
         }
 
-        supplies[context[2] - 1].reverse();
-        // break;
+        supplies[ctx[2] - 1].reverse();
     }
 
     let mut res: String = "".to_owned();
-
     for mag in &supplies {
         let supply = mag[0].as_bytes()[1] as char;
         res.push(supply);
